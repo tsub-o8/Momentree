@@ -171,7 +171,8 @@
 
         <script>
             const totalCards = 198;
-            const container = document.getElementById('card-container');
+
+            const slidesData = [];
 
             for (let i = 1; i <= totalCards; i++) {
                 let frontNum = (i * 2) - 1;
@@ -180,42 +181,54 @@
                 let frontNumStr = String(frontNum).padStart(3, '0');
                 let backNumStr = String(backNum).padStart(3, '0');
 
-                let frontSrc = `img/card-${frontNumStr}.jpg`;
-                let backSrc = `img/card-${backNumStr}.jpg`;
-
-                let html = `
-                    <div class="swiper-slide">
-                        <div class="card">
-                            <div class="card-face card-front">
-                                <img src="${frontSrc}" loading="lazy" alt="front">
-                            </div>
-                            <div class="card-face card-back">
-                                <img src="${backSrc}" loading="lazy" alt="back">
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                container.insertAdjacentHTML('beforeend', html);
+                slidesData.push({
+                    frontSrc: `img/card-${frontNumStr}.jpg`,
+                    backSrc: `img/card-${backNumStr}.jpg`,
+                    id: i
+                });
             }
 
             const randomStartIndex = Math.floor(Math.random() * totalCards);
 
             const swiper = new Swiper('.swiper', {
                 effect: 'cards',
-                loop: true,
                 grabCursor: true,
                 centeredSlides: true,
                 slidesPerView: 'auto',
+                loop: true,
+                initialSlide: randomStartIndex,
+                keyboard: false,
+
                 preloadImages: false,
                 updateOnImagesReady: false,
+
+                virtual: {
+                    slides: slidesData,
+                    addSlidesBefore: 2,
+                    addSlidesAfter: 2,
+
+                    renderSlide: function (slideContent, index) {
+                        return `
+                            <div class="swiper-slide">
+                                <div class="card">
+                                    <div class="card-face card-front">
+                                        <img src="${slideContent.frontSrc}" loading="lazy" alt="front">
+                                    </div>
+                                    <div class="card-face card-back">
+                                        <img src="${slideContent.backSrc}" loading="lazy" alt="front">
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    },
+                },
+
                 cardsEffect: {
                     slideShadows: false,
                     perSlideOffset: 40,
                     perSlideRotate: 2,
                 },
-                keyboard: false,
-                initialSlide: randomStartIndex,
+
 
                 on: {
                     slideChange: function () {
