@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Momentree</title>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+        <style>
+            body {
+                margin: 0;
+                background-color: #fffcf5;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                overflow: hidden;
+            }
+
+            .swiper {
+                width: auto;
+                height: 60vh;
+                aspect-ratio: 783/2346;
+
+                max-width: 85vw;
+                max-height: 80vh;
+
+                overflow: visible;
+            }
+
+            .swiper-slide {
+                width: 100%;
+                height: 100%;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .swiper-slide-active .card .card-face {
+                filter: blur(0) brightness(1);
+            }
+
+            .card {
+                width: 100%;
+                height: 100%;
+                
+                position: relative;
+                transform-style: preserve-3d;
+
+                transition: transform 0.6s;
+
+                cursor: pointer;
+
+            }
+
+            .card.is-flipped {
+                transform: rotateY(180deg);
+            }
+
+            .card-face {
+                position: absolute;
+
+                width: 100%;
+                height: 100%;
+
+                border-radius: 2px;
+
+                background-size: cover;
+                background-position: center;
+                background-color: #fffcf5;
+
+                backface-visibility: hidden;
+                overflow: hidden;
+
+                transition: filter 0.6s;
+                filter: blur(5px) brightness(0.96);
+            }
+
+            .card-face img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+            .card-back {
+                transform: rotateY(180deg);
+            }
+
+            #title {
+                margin: 0;
+                margin-bottom: 60px;
+
+                font-family: 'Avenir', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                font-size: 24px;
+                font-weight: normal;
+                letter-spacing: 4px;
+
+                color: #141e1f ;
+
+                z-index: 100;
+            }
+
+            #counter {
+                margin-top: 30px;
+                z-index: 100;
+
+                font-family: 'Avenir', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                font-size: 14px;
+                color: #888;
+                letter-spacing: 2px;
+            }
+
+            #random-btn {
+                margin-top: 45px;
+                z-index: 100;
+
+                width: 36px;
+                height: 36px;
+                padding: 0;
+
+                border-radius: 50%;
+                border: none;
+                background-color: #fffcf5;
+                
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                
+                cursor: pointer;
+                transition: transform 0.1s;
+
+            }
+
+            #random-btn:active {
+                transform: scale(0.95);
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1 id="title">Momentree</h1>
+
+        <div class="swiper">
+            <div class="swiper-wrapper" id="card-container"></div>
+        </div>
+
+        <div id="counter"></div>
+
+        <button id="random-btn" aria-label="Shuffle">
+            <img src="img/shuffle.svg" alt="shuffle icon">
+        </button>
+
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+        <script>
+            const totalCards = 198;
+            const container = document.getElementById('card-container');
+
+            for (let i = 1; i <= totalCards; i++) {
+                let frontNum = (i * 2) - 1;
+                let backNum = (i *2);
+
+                let frontNumStr = String(frontNum).padStart(3, '0');
+                let backNumStr = String(backNum).padStart(3, '0');
+
+                let frontSrc = `img/card-${frontNumStr}.jpg`;
+                let backSrc = `img/card-${backNumStr}.jpg`;
+
+                let html = `
+                    <div class="swiper-slide">
+                        <div class="card">
+                            <div class="card-face card-front">
+                                <img src="${frontSrc}" loading="lazy" alt="front">
+                            </div>
+                            <div class="card-face card-back">
+                                <img src="${backSrc}" loading="lazy" alt="back">
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                container.insertAdjacentHTML('beforeend', html);
+            }
+
+            const randomStartIndex = Math.floor(Math.random() * totalCards);
+
+            const swiper = new Swiper('.swiper', {
+                effect: 'cards',
+                loop: true,
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                cardsEffect: {
+                    slideShadows: false,
+                    perSlideOffset: 40,
+                    perSlideRotate: 2,
+                },
+                keyboard: false,
+                initialSlide: randomStartIndex,
+
+                on: {
+                    slideChange: function () {
+                        const flippedCards = document.querySelectorAll('.card.is-flipped');
+                        flippedCards.forEach(card => card.classList.remove('is-flipped'));
+
+                        const counter = document.getElementById('counter');
+                        const current = this.realIndex + 1;
+                        counter.innerText = `${current} / ${totalCards}`
+                    }
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+
+                if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+
+                    const activeSlide = swiper.slides[swiper.activeIndex];
+                    const card = activeSlide.querySelector('.card');
+
+                    if (card) {
+                        if (card.classList.contains('is-flipped')) {
+                            swiper.slideNext();
+                        } else {
+                            card.classList.add('is-flipped');
+                        }
+                    }
+                }
+
+                if (e.key === 'ArrowLeft') {
+                    swiper.slidePrev();
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (swiper.touchEventsData.isMoved) return;
+
+                const activeSlide = swiper.slides[swiper.activeIndex];
+                const activeCard = activeSlide.querySelector('.card');
+
+                if (activeCard) {
+                    activeCard.classList.toggle('is-flipped');
+                }
+            });
+
+            const counterElement = document.getElementById('counter');
+            counterElement.innerText = `${swiper.realIndex + 1} / ${totalCards}`;
+
+            const randomBtn = document.getElementById('random-btn');
+            let isShuffling = false;
+
+            randomBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (isShuffling) return;
+                isShuffling = true;
+
+                const targetIndex = Math.floor(Math.random() * totalCards);
+                const runUpCount = 20;
+
+                let startIndex = targetIndex - runUpCount;
+                if (startIndex < 0) startIndex = totalCards + startIndex;
+
+                swiper.slideToLoop(startIndex, 0);
+
+                let currentStep = 0;
+
+                const moveNext = () => {
+                    if (currentStep >= runUpCount) {
+                        isShuffling = false;
+                        return;
+                    }
+
+                    const progress = currentStep / runUpCount;
+
+                    const minSpeed = 10;
+                    const maxSpeed = 80;
+
+                    const delay = minSpeed + (maxSpeed - minSpeed) * Math.pow(progress, 2);
+
+                    swiper.slideNext(delay);
+
+                    currentStep++;
+
+                    setTimeout(moveNext, delay);
+                };
+
+                moveNext();
+            });
+
+        </script>
+    </body>
+</html> 
