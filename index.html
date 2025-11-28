@@ -135,6 +135,16 @@
 
             }
 
+            #random-btn img {
+                width: 36px;
+                height: 36px;
+
+                object-fit: contain;
+                
+                margin: 0;
+                display: block;
+            }
+
             #random-btn:active {
                 transform: scale(0.95);
             }
@@ -194,6 +204,8 @@
                 grabCursor: true,
                 centeredSlides: true,
                 slidesPerView: 'auto',
+                preloadImages: false,
+                updateOnImagesReady: false,
                 cardsEffect: {
                     slideShadows: false,
                     perSlideOffset: 40,
