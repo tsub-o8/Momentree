@@ -20,8 +20,8 @@
             }
 
             .swiper {
-                width: auto;
-                height: 60vh;
+                width: 200px;
+                height: auto;
                 aspect-ratio: 783/2346;
 
                 max-width: 85vw;
@@ -70,14 +70,6 @@
 
                 background-size: cover;
                 background-position: center;
-                background-color: #e0e0e0;
-
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                color: #999;
-                font-family: "Avenir", sans-serif;
-                font-size: 12px;
 
                 backface-visibility: hidden;
                 overflow: hidden;
@@ -91,11 +83,6 @@
                 height: 100%;
                 object-fit: cover;
                 display: block;
-
-                position: absolute;
-                top: 0;
-                left: 0;
-                
             }
 
             .card-back {
@@ -206,7 +193,8 @@
                 effect: 'cards',
                 grabCursor: true,
                 centeredSlides: true,
-                slidesPerView: 'auto',
+                
+                slidesPerView: 1,
                 loop: true,
                 initialSlide: randomStartIndex,
                 keyboard: false,
