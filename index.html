@@ -212,10 +212,10 @@
                             <div class="swiper-slide">
                                 <div class="card">
                                     <div class="card-face card-front">
-                                        <img src="${slideContent.frontSrc}" loading="lazy" alt="front">
+                                        <img src="${slideContent.frontSrc}" alt="front">
                                     </div>
                                     <div class="card-face card-back">
-                                        <img src="${slideContent.backSrc}" loading="lazy" alt="front">
+                                        <img src="${slideContent.backSrc}" alt="front">
                                     </div>
                                 </div>
                             </div>
@@ -247,14 +247,15 @@
                 if (e.key === 'ArrowRight') {
                     e.preventDefault();
 
-                    const activeSlide = swiper.slides[swiper.activeIndex];
-                    const card = activeSlide.querySelector('.card');
-
-                    if (card) {
-                        if (card.classList.contains('is-flipped')) {
-                            swiper.slideNext();
-                        } else {
-                            card.classList.add('is-flipped');
+                    const activeSlide = swiper.el.querySelector('.card');
+                    if (activeSlide) {
+                        const card = activeSlide.querySelector('.card');
+                        if (card) {
+                            if (card.classList.contains('is-flipped')) {
+                                swiper.slideNext();
+                            } else {
+                                card.classList.add('is-flipped');
+                            }
                         }
                     }
                 }
@@ -267,11 +268,13 @@
             document.addEventListener('click', (e) => {
                 if (swiper.touchEventsData.isMoved) return;
 
-                const activeSlide = swiper.slides[swiper.activeIndex];
-                const activeCard = activeSlide.querySelector('.card');
-
-                if (activeCard) {
-                    activeCard.classList.toggle('is-flipped');
+                const activeSlide = swiper.el.querySelector('.swiper-slide-active');
+                
+                if (activeSlide) {
+                        const activeCard = activeSlide.querySelector('.card');
+                    if (activeCard) {
+                        activeCard.classList.toggle('is-flipped');
+                    }
                 }
             });
 
