@@ -70,7 +70,14 @@
 
                 background-size: cover;
                 background-position: center;
-                background-color: #fffcf5;
+                background-color: #e0e0e0;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #999;
+                font-family: "Avenir", sans-serif;
+                font-size: 12px;
 
                 backface-visibility: hidden;
                 overflow: hidden;
@@ -84,6 +91,11 @@
                 height: 100%;
                 object-fit: cover;
                 display: block;
+
+                position: absolute;
+                top: 0;
+                left: 0;
+                
             }
 
             .card-back {
@@ -127,7 +139,6 @@
                 border-radius: 50%;
                 border: none;
                 background-color: #fffcf5;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
                 
                 display: flex;
                 justify-content: center;
@@ -247,7 +258,7 @@
                 if (e.key === 'ArrowRight') {
                     e.preventDefault();
 
-                    const activeSlide = swiper.el.querySelector('.card');
+                    const activeSlide = swiper.el.querySelector('.swiper-slide-active');
                     if (activeSlide) {
                         const card = activeSlide.querySelector('.card');
                         if (card) {
