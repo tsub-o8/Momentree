@@ -17,8 +17,32 @@
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
+        <script>
+            (function(d) {
+                var config = {
+                kitId: 'ouz5wlt',
+                scriptTimeout: 3000,
+                async: true
+                },
+                h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+            })(document);
+            
+            (function(d) {
+                var config = {
+                kitId: 'ouz5wlt',
+                scriptTimeout: 3000,
+                async: true
+                },
+                h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+            })(document);
+        </script>
+
         <style>
             body {
+                font-family: "avenir-lt-pro", "dnp-shuei-gothic-gin-std", sans-serif;
+                font-weight: 400;
+                font-style: normal;
+
                 margin: 0;
                 background-color: #fffcf5;
                 height: 100dvh;
@@ -29,16 +53,99 @@
                 overflow: hidden;
             }
 
+            #login-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #141e1f;
+                z-index: 9999;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .login-box {
+                text-align: center;
+            }
+
+            .login-box h2 {
+                font-size: 24px;
+                letter-spacing: 3px;
+                margin-bottom: 3.6vh;
+                color: #fffcf5;
+            }
+
+            .login-box input {
+                display: block;
+                margin: 20px auto;
+                padding: 5px 10px;
+                width: 200px;
+
+                background: transparent;
+                border: none;
+                border-bottom: 1px solid #fffcf5;
+                outline: none;
+
+                font-size: 16px;
+                color: #fffcf5;
+            }
+
+            #login-btn {
+                margin: 2vh auto 0;
+
+                width: 36px;
+                height: 36px;
+                
+                flex-shrink: 0;
+                padding: 0;
+
+                border-radius: 50%;
+                border: none;
+                background-color: #141e1f;
+                
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                
+                cursor: pointer;
+                transition: transform 0.1s;
+
+            }
+
+            #login-btn img {
+                width: 100%;
+                height: 100%;
+
+                object-fit: contain;
+                overflow: hidden;
+                
+                margin: 0;
+                display: block;
+            }
+
+            #login-btn:active {
+                transform: scale(0.95);
+            }
+
+            #error-msg {
+                color: #ce4c40;
+                font-size: 12px;
+                margin: 1vh;
+                height: 20px;
+            }
+
              #title {
                 margin: 0;
                 margin-bottom: 6vh;
 
-                font-family: 'Avenir', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
                 font-size: 24px;
                 font-weight: normal;
                 letter-spacing: 4px;
 
-                color: #141e1f ;
+                color: #141e1f;
 
                 z-index: 100;
             }
@@ -120,7 +227,6 @@
                 margin-top: 3vh;
                 z-index: 100;
 
-                font-family: 'Avenir', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
                 font-size: 12px;
                 color: #888;
                 letter-spacing: 2px;
@@ -164,9 +270,24 @@
                 transform: scale(0.95);
             }
         </style>
+
+        
     </head>
 
     <body>
+
+        <div id="login-overlay">
+            <div class="login-box">
+                <h2>Momentree</h2>
+                <input type="text" id="user-id" placeholder="ID">
+                <input type="password" id="user-pass" placeholder="Password">
+                <p id="error-msg"></p>
+                <button id="login-btn" aria-label="Enter">
+                    <img src="img/enter.svg" alt="enter icon">
+                </button>
+            </div>
+        </div>
+
         <h1 id="title">Momentree</h1>
 
         <div class="swiper">
@@ -182,6 +303,38 @@
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
         <script>
+            const CORRECT_ID = "76art"
+            const CORRECT_PASS = "h1t0t0k1";
+
+            const loginOverlay = document.getElementById('login-overlay');
+            const loginBtn = document.getElementById('login-btn');
+            const idInput = document.getElementById('user-id');
+            const passInput = document.getElementById('user-pass');
+            const errorMsg = document.getElementById('error-msg');
+
+            const tryLogin = () => {
+                const inputID = idInput.value;
+                const inputPass = passInput.value;
+
+                if (inputID === CORRECT_ID && inputPass === CORRECT_PASS) {
+                    loginOverlay.style.transition = "opacity 0.5s";
+                    loginOverlay.style.opacity = "0";
+
+                    setTimeout (() => {
+                        loginOverlay.style.display = "none";
+                    }, 500);
+                } else {
+                    errorMsg.innerText = "IDかパスワードが間違っています";
+                }
+            };
+
+            loginBtn.addEventListener('click', tryLogin);
+
+            passInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') tryLogin();
+            });
+
+
             const totalCards = 198;
 
             const slidesData = [];
