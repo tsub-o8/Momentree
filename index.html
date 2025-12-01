@@ -296,8 +296,8 @@
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
         <script>
-            const CORRECT_ID = "76art"
-            const CORRECT_PASS = "h1t0t0k1";
+            const CORRECT_ID_HASH = "3311ad5d72067f3e04afdc83bffd6ba5129a0f4c6cd3ff762131f7fc9f0ef3a5"
+            const CORRECT_PASS_HASH = "829e4d65e6ef4a2c03bb2cabf1221f05940fddc59f899a77137328890e06b053";
 
             const loginOverlay = document.getElementById('login-overlay');
             const loginBtn = document.getElementById('login-btn');
@@ -305,11 +305,20 @@
             const passInput = document.getElementById('user-pass');
             const errorMsg = document.getElementById('error-msg');
 
-            const tryLogin = () => {
+            const sha256 = async (text) => {
+                const uint8 = new TextEncoder().encode(text);
+                const digest = await crypto.subtle.digest('SHA-256', uint8);
+                return Array.from(new Uint8Array(dagest)).map(v => v.toString(16).padStart(2,'0')).join('');
+            };
+
+            const tryLogin = async () => {
                 const inputID = idInput.value;
                 const inputPass = passInput.value;
 
-                if (inputID === CORRECT_ID && inputPass === CORRECT_PASS) {
+                const idHash = await sha256(inputID);
+                const passHash = await sha256(inputPass)
+
+                if (idHash === CORRECT_ID_HASH && passHash === CORRECT_PASS_HASH) {
                     loginOverlay.style.transition = "opacity 0.5s";
                     loginOverlay.style.opacity = "0";
 
@@ -318,6 +327,7 @@
                     }, 500);
                 } else {
                     errorMsg.innerText = "IDかパスワードが間違っています";
+                    passInput.value = "";
                 }
             };
 
